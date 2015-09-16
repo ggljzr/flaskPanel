@@ -1,0 +1,39 @@
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="content-language" content="en" />
+<link rel="stylesheet" type="text/css" 
+href="{{url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+	
+	<h1>Flask Temp Server</h1>
+
+	<div>
+		<h2 id='huptime'>Uptime</h2>
+		<ul>
+			<li class='uptime'>Date: {{ date }}</li>
+			<li class='uptime'>Uptime: {{ uptime }} </li>
+			<li class='uptime'>Load average: {{ loadavg }}</li>
+		</ul>
+	</div>
+
+	<div>
+		<h2 id='htemp'>DHT11 sensor</h2>
+		<ul>
+			<li class='temp'>Temperature: {{ temp }} °C</li>
+			<li class='temp'>Humididty: {{ hum }} %</li> 
+		</ul>
+	</div>
+
+	<div>
+		<h2 id='hrest'>REST</h2>
+		<ul>
+			<li><a href=getTemp target="_blank">getTemp</a> -- returns sensor value (JSON)</li>
+			<li><a href=ipconf target="_blank">ipconf</a> -- returns ifconfig output</li>
+			<li><a href=uptime target="_blank">uptime</a> -- returns uptime output</li>
+		</ul>
+	</div>
+</body>
