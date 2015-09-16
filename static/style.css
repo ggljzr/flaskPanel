@@ -40,6 +40,16 @@ h2#hrest
 	background-color: #F29377;
 }
 
+li.ipconf
+{
+	color: #A29AB6;
+}
+
+h2#hipconf
+{
+	background-color: #A29AB6;
+}
+
 li.temp
 {
 	color: #FFDFA4;
@@ -58,13 +68,18 @@ a:hover
 
 
 
-div
+div.window
 {
 	background-color:#2B3D46;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	margin-left: 5px;
-	margin-bottom: 15px;
+	margin-bottom: 20px;
 	width: 450px;
 	box-shadow: 4px 4px 8px #2d2d2d;
+}
+
+ul#interface_list
+{
+
 }

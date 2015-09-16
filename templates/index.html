@@ -11,7 +11,7 @@ href="{{url_for('static', filename='style.css') }}">
 	
 	<h1>Flask Panel</h1>
 
-	<div>
+	<div class='window'>
 		<h2 id='huptime'>Uptime</h2>
 		<ul>
 			<li class='uptime'>Date: {{ date }}</li>
@@ -20,7 +20,7 @@ href="{{url_for('static', filename='style.css') }}">
 		</ul>
 	</div>
 
-	<div>
+	<div class='window'>
 		<h2 id='htemp'>DHT11 sensor</h2>
 		<ul>
 			<li class='temp'>Temperature: {{ temp }} °C</li>
@@ -28,7 +28,26 @@ href="{{url_for('static', filename='style.css') }}">
 		</ul>
 	</div>
 
-	<div>
+	<div class='window'>
+		<h2 id='hipconf'>Ifconfig</h2>
+		<ul id='interface_list'>	
+			<li class='ipconf'>Eth0:
+			<ul>
+				{% for entry in eth0_data %}
+				<li class='ipconf'>{{ entry }}</li>
+				{% endfor %}
+			</ul></li>
+
+			<li class='ipconf'>lo:
+			<ul>
+				{% for entry in lo_data %}
+				<li class='ipconf'>{{ entry }}</li>
+				{% endfor %}
+			</ul></li>
+		</ul>
+	</div>
+
+	<div class='window'>
 		<h2 id='hrest'>REST</h2>
 		<ul>
 			<li><a href=getTemp target="_blank">getTemp</a> -- returns sensor value (JSON)</li>

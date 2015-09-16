@@ -6,6 +6,7 @@ import sys
 import os
 import time
 import Adafruit_DHT
+import string
 
 from flask import Flask
 from flask import render_template
@@ -15,6 +16,31 @@ app = Flask(__name__)
 sensor = 11 #using DHT11 sensor
 pin = 13 #connected to pin 13
 
+#primitive ifconfig parser
+def parse_ifconfig(interface):
+	retval = []
+	
+	#try to find hwaddr
+	hwaddr = os.popen('ifconfig ' + str(interface) + " | grep HWaddr | awk -F' ' '{print $5}' ", 'r').read()
+	if hwaddr == '' or hwaddr.isspace():
+		hwaddr = 'HWaddr:none'
+	else:
+		hwaddr = 'HWaddr:' + hwaddr
+
+	retval.append(hwaddr)
+
+	for i in range(2,5):
+		info = os.popen('ifconfig ' + str(interface) + 
+				" | grep inet | awk -F' ' '{print $" + str(i) +
+				" }'", 'r').read()
+		if info == '' or info.isspace():
+			continue
+		else:
+			retval.append(info)
+	
+	return retval
+
+
 @app.route('/')
 def hello_world():
 	(hum, temp) = Adafruit_DHT.read_retry(sensor, pin)
@@ -22,9 +48,14 @@ def hello_world():
 	uptime = os.popen("uptime | awk -F, {'print $1$2'}", 'r').read()
 	uptime = uptime[10:].replace('  ', ' ') #remove date and redundant space
 	loadavg = os.popen('cat /proc/loadavg', 'r').read()
+
+	eth0_data = parse_ifconfig('eth0')
+	lo_data = parse_ifconfig('lo')
 	return render_template('index.html', uptime=uptime,
 					     date=date,
 					     loadavg=loadavg,
+					     eth0_data=eth0_data,
+					     lo_data = lo_data,
 					     hum=hum,temp=temp)
 
 @app.route('/getTemp')
