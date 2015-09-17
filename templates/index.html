@@ -10,6 +10,16 @@ href="{{url_for('static', filename='style.css') }}">
 <body>
 	
 	<h1>Flask Panel</h1>
+	
+	
+
+	<div class='window'>
+		<h2 id='htemp'>DHT11 sensor</h2>
+		<ul>
+			<li class='temp'>Temperature: {{ temp }} °C</li>
+			<li class='temp'>Humididty: {{ hum }} %</li> 
+		</ul>
+	</div>
 
 	<div class='window'>
 		<h2 id='huptime'>Uptime</h2>
@@ -17,14 +27,6 @@ href="{{url_for('static', filename='style.css') }}">
 			<li class='uptime'>Date: {{ date }}</li>
 			<li class='uptime'>Uptime: {{ uptime }} </li>
 			<li class='uptime'>Load average: {{ loadavg }}</li>
-		</ul>
-	</div>
-
-	<div class='window'>
-		<h2 id='htemp'>DHT11 sensor</h2>
-		<ul>
-			<li class='temp'>Temperature: {{ temp }} °C</li>
-			<li class='temp'>Humididty: {{ hum }} %</li> 
 		</ul>
 	</div>
 
@@ -48,11 +50,35 @@ href="{{url_for('static', filename='style.css') }}">
 	</div>
 
 	<div class='window'>
+		<h2 id='hdisks'>Disks</h2>
+		<ul>
+			<li class='disks'>/dev/root
+			<ul>
+				<li class='disks'>Size: {{ root_info[1] }}</li>
+				<li class='disks'>Used: {{ root_info[2] }} ({{ root_info[4] }})</li>
+				<li class='disks'>Available: {{ root_info[3] }}</li>
+			</ul></li>
+			{% if sda1_info %}
+			<li class='disks'>/dev/sda1
+			<ul>
+				<li class='disks'>Size: {{ sda1_info[1] }}</li>
+				<li class='disks'>Used: {{ sda1_info[2] }} ({{ sda1_info[4] }})</li>
+				<li class='disks'>Available: {{ sda1_info[3] }}</li>
+			</ul>
+			{% endif %}
+
+
+		<ul>
+	</div>
+
+
+	<div class='window'>
 		<h2 id='hrest'>REST</h2>
 		<ul>
 			<li><a href=getTemp target="_blank">getTemp</a> -- returns sensor value (JSON)</li>
 			<li><a href=ipconf target="_blank">ipconf</a> -- returns ifconfig output</li>
 			<li><a href=uptime target="_blank">uptime</a> -- returns uptime output</li>
+			<li><a href='df' target="_blank">df</a> -- returns df -h output </li>
 		</ul>
 	</div>
 </body>

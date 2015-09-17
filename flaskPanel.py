@@ -40,6 +40,9 @@ def parse_ifconfig(interface):
 	
 	return retval
 
+#parsing df output
+def parse_df(device):
+	return os.popen('df -h ' + str(device) + ' | tail -n 1', 'r').read().split()
 
 @app.route('/')
 def hello_world():
@@ -51,9 +54,14 @@ def hello_world():
 
 	eth0_data = parse_ifconfig('eth0')
 	lo_data = parse_ifconfig('lo')
+
+	root_info = parse_df('/dev/root');
+	sda1_info = parse_df('/dev/sda1');
 	return render_template('index.html', uptime=uptime,
 					     date=date,
 					     loadavg=loadavg,
+					     root_info=root_info,
+					     sda1_info=sda1_info,
 					     eth0_data=eth0_data,
 					     lo_data = lo_data,
 					     hum=hum,temp=temp)
@@ -74,6 +82,9 @@ def ipconf():
 @app.route('/uptime')
 def uptime():
 	return os.popen('uptime', 'r').read()
+@app.route('/df')
+def disks():
+	return os.popen('df -h', 'r').read()
 
 if __name__ == '__main__':
 	app.run(host='raspberrypi.local')

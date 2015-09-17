@@ -20,15 +20,7 @@ h2
 	margin-bottom: -5px;
 }
 
-li, a
-{
-	color: #F29377;
-}
 
-li.uptime
-{
-	color: #91B0A0;
-}
 
 h2#huptime
 {
@@ -40,19 +32,9 @@ h2#hrest
 	background-color: #F29377;
 }
 
-li.ipconf
-{
-	color: #A29AB6;
-}
-
 h2#hipconf
 {
 	background-color: #A29AB6;
-}
-
-li.temp
-{
-	color: #FFDFA4;
 }
 
 h2#htemp
@@ -60,13 +42,40 @@ h2#htemp
 	background-color: #FFDFA4;
 }
 
+h2#hdisks
+{
+	background-color: #9ECED1;
+}
 
 a:hover
 {
 	color: #fff4e8;
 }
 
+li, a
+{
+	color: #F29377;
+}
 
+li.temp
+{
+	color: #FFDFA4;
+}
+
+li.ipconf
+{
+	color: #A29AB6;
+}
+
+li.uptime
+{
+	color: #91B0A0;
+}
+
+li.disks
+{
+	color: #9ECED1;
+}
 
 div.window
 {
@@ -79,7 +88,10 @@ div.window
 	box-shadow: 4px 4px 8px #2d2d2d;
 }
 
-ul#interface_list
+img
 {
-
+	height: 25px;
+	width: 25px;
+	padding-left: 290px;
+	margin-bottom: -5px;
 }
