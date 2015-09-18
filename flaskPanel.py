@@ -72,8 +72,8 @@ def get_temp():
 
 	if temp is not None and hum is not None:
 		return '{"temp" : ' + str(temp) + ',"hum" : ' + str(hum) + '}'
-	else:
-		return '{"temp" : "none" , "hum" : "none"}'
+
+	return '{"temp" : "none" , "hum" : "none"}'
 
 @app.route('/ipconf')
 def ipconf():
