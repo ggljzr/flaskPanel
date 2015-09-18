@@ -6,3 +6,5 @@ sensor is DHT11 and it is read with Adafruit DHT library (https://github.com/ada
 server is running on port 5000
 
 to run use "sudo python flaskPanel.py" (sudo is needed for access to Rpi's GPIO pins)
+
+![Alt text](pic.png?raw=true "Flask Panel")
