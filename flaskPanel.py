@@ -56,9 +56,10 @@ def parse_ifconfig(interface):
 def parse_df(device):
 	#return os.popen('df -h ' + str(device) + ' | tail -n 1', 'r').read().split()
 	proc_df = subprocess.Popen(['df', '-h', str(device)], stdout=subprocess.PIPE)
-	dev_info = subprocess.check_output(['tail', '-n', '1'], stdin=proc_df.stdout)
+	dev_info = subprocess.check_output(['tail', '-n', '1'], stdin=proc_df.stdout).split()
 	proc_df.stdout.close()
-	return dev_info.split()
+	
+	return dev_info
 
 
 @app.route('/')
@@ -72,7 +73,7 @@ def hello_world():
 	eth0_data = parse_ifconfig('eth0')
 	lo_data = parse_ifconfig('lo')
 
-	root_info = parse_df('/dev/root');
+	root_info = parse_df('/dev/rot');
 	sda1_info = parse_df('/dev/sda1');
 	return render_template('index.html', uptime=uptime,
 					     date=date,
