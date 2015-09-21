@@ -3,7 +3,7 @@
 #simple flask server for reading dht11 sensor and fetching data
 
 import sys
-import os
+import subprocess
 import time
 import Adafruit_DHT
 import string
@@ -21,18 +21,24 @@ def parse_ifconfig(interface):
 	retval = []
 	
 	#try to find hwaddr
-	hwaddr = os.popen('ifconfig ' + str(interface) + " | grep HWaddr | awk -F' ' '{print $5}' ", 'r').read()
+	proc_ifconfig = subprocess.Popen(['ifconfig', interface], stdout=subprocess.PIPE)
+	#shell=True for trusted input only (shell injection)
+	hwaddr = subprocess.check_output("grep HWaddr | awk -F' ' '{print $5}'", stdin=proc_ifconfig.stdout, shell=True)
+	proc_ifconfig.stdout.close()
+
 	if hwaddr == '' or hwaddr.isspace():
 		hwaddr = 'HWaddr:none'
 	else:
-		hwaddr = 'HWaddr:' + hwaddr
+		hwaddr = 'HWaddr:' + hwaddr.strip()
 
 	retval.append(hwaddr)
 
 	for i in range(2,5):
-		info = os.popen('ifconfig ' + str(interface) + 
-				" | grep inet | awk -F' ' '{print $" + str(i) +
-				" }'", 'r').read()
+		proc_ifconfig = subprocess.Popen(['ifconfig', str(interface)], stdout=subprocess.PIPE)
+		info = subprocess.check_output("grep inet | awk -F' ' '{print $" + str(i) + "}'", 
+						stdin=proc_ifconfig.stdout, shell=True)
+		proc_ifconfig.stdout.close()
+
 		if info == '' or info.isspace():
 			continue
 		else:
@@ -42,15 +48,20 @@ def parse_ifconfig(interface):
 
 #parsing df output
 def parse_df(device):
-	return os.popen('df -h ' + str(device) + ' | tail -n 1', 'r').read().split()
+	#return os.popen('df -h ' + str(device) + ' | tail -n 1', 'r').read().split()
+	proc_df = subprocess.Popen(['df', '-h', str(device)], stdout=subprocess.PIPE)
+	dev_info = subprocess.check_output(['tail', '-n', '1'], stdin=proc_df.stdout)
+	proc_df.stdout.close()
+	return dev_info.split()
+
 
 @app.route('/')
 def hello_world():
 	(hum, temp) = Adafruit_DHT.read_retry(sensor, pin)
-	date = os.popen('date', 'r').read()
-	uptime = os.popen("uptime | awk -F, {'print $1$2'}", 'r').read()
+	date = subprocess.check_output(['date'])
+	uptime = subprocess.check_output("uptime | awk -F, {'print $1$2'}", shell=True)
 	uptime = uptime[10:].replace('  ', ' ') #remove date and redundant space
-	loadavg = os.popen('cat /proc/loadavg', 'r').read()
+	loadavg = subprocess.check_output(['cat', '/proc/loadavg'])
 
 	eth0_data = parse_ifconfig('eth0')
 	lo_data = parse_ifconfig('lo')
@@ -77,14 +88,14 @@ def get_temp():
 
 @app.route('/ipconf')
 def ipconf():
-	return os.popen('ifconfig', 'r').read()
+	return subprocess.check_output(['ifconfig'])
 
 @app.route('/uptime')
 def uptime():
-	return os.popen('uptime', 'r').read()
+	return subprocess.check_output(['uptime'])
 @app.route('/df')
 def disks():
-	return os.popen('df -h', 'r').read()
+	return subprocess.check_output(['df', '-h'])
 
 if __name__ == '__main__':
 	app.run(host='raspberrypi.local')
