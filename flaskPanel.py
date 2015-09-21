@@ -20,9 +20,13 @@ def parse_ifconfig(interface):
 	retval = []
 	
 	#try to find hwaddr
-	proc_ifconfig = subprocess.Popen(['ifconfig', interface], stdout=subprocess.PIPE)
+	proc_ifconfig = subprocess.Popen(['ifconfig', str(interface)], stdout=subprocess.PIPE)
 	#shell=True for trusted input only (shell injection)
-	hwaddr = subprocess.check_output("grep HWaddr | awk -F' ' '{print $5}'", stdin=proc_ifconfig.stdout, shell=True)
+	try:
+		hwaddr = subprocess.check_output(['grep', 'HWaddr'], stdin=subprocess.PIPE)
+	except subprocess.CalledProcessError:
+		hwaddr = ''
+
 	proc_ifconfig.stdout.close()
 
 	if hwaddr == '' or hwaddr.isspace():
@@ -32,16 +36,19 @@ def parse_ifconfig(interface):
 
 	retval.append(hwaddr)
 
-	for i in range(2,5):
-		proc_ifconfig = subprocess.Popen(['ifconfig', str(interface)], stdout=subprocess.PIPE)
-		info = subprocess.check_output("grep inet | awk -F' ' '{print $" + str(i) + "}'", 
-						stdin=proc_ifconfig.stdout, shell=True)
+	#find additional info
+	proc_ifconfig = subprocess.Popen(['ifconfig', str(interface)], stdout=subprocess.PIPE)
+	try:
+		inet_row = subprocess.check_output(['grep', 'inet'], stdin=proc_ifconfig.stdout).strip().split()
+	except subprocess.CalledProcessError:
+		retval.append("No additioanl info found")
 		proc_ifconfig.stdout.close()
+		return retval
 
-		if info == '' or info.isspace():
-			continue
-		else:
-			retval.append(info)
+	proc_ifconfig.stdout.close()
+
+	for i in inet_row[1:]: #skip "inet" in output
+		retval.append(i)
 	
 	return retval
 
