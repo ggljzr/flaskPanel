@@ -8,8 +8,7 @@ import time
 import Adafruit_DHT
 import string
 
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
 
@@ -97,5 +96,37 @@ def uptime():
 def disks():
 	return subprocess.check_output(['df', '-h'])
 
+#requires name:some_name in .css file
+@app.route('/getTheme')
+def get_theme():
+	try:
+		proc = subprocess.check_output('cat static/style.css | grep name:', shell=True)
+	except subprocess.CalledProcessError:
+		return 'No name specified'
+	
+	proc = proc.split(':')
+	if len(proc) == 2:
+		return proc[1]
+
+	return 'Invalid name format'
+
+#needs one more refresh after successfuly changing theme
+#note that themes are changed server side
+@app.route('/setTheme')
+def set_theme():
+	req_theme = request.args.get('themeName', '')
+	known_themes = subprocess.check_output(['ls', 'themes'])
+
+	if req_theme == '':
+		return 'Key error<br>Use setTheme?themeName=some_theme.css<br>(current theme is: ' + str(get_theme()) + ')<br>Known themes: ' + known_themes
+	
+	proc = subprocess.call(['cp', 'themes/' + req_theme, 'static/style.css'])
+	if proc == 1:
+		return 'Theme not found<br>Known themes:' + known_themes
+
+	#return 'Theme changed to: ' + req_theme
+	return redirect('/')
+
 if __name__ == '__main__':
 	app.run(host='raspberrypi.local')
+

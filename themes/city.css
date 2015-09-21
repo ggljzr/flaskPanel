@@ -1,10 +1,11 @@
 /*
- * name:forest_low
- */
+ *name:city
+ * */
+
 body
 {
 	color: #fff4e8;
-	background-color:#545454;
+	background-color:#44606E;
 	font-family: Terminus;
 }
 
@@ -16,7 +17,7 @@ h1
 
 h2
 {
-	color: #3F4040;
+	color: #2B3D46;
 	font-size:18px;
 	padding-left: 5px;
 	margin-top: -10px;
@@ -27,27 +28,27 @@ h2
 
 h2#huptime
 {
-	background-color: #9CA68B;
+	background-color: #91B0A0;
 }
 
 h2#hrest
 {
-	background-color: #A48484;
+	background-color: #F29377;
 }
 
 h2#hipconf
 {
-	background-color: #978B93;
+	background-color: #A29AB6;
 }
 
 h2#htemp
 {
-	background-color: #CABA9B;
+	background-color: #FFDFA4;
 }
 
 h2#hdisks
 {
-	background-color: #789C9F;
+	background-color: #9ECED1;
 }
 
 a:hover
@@ -57,32 +58,32 @@ a:hover
 
 li, a
 {
-	color: #A48484;
+	color: #F29377;
 }
 
 li.temp
 {
-	color: #CABA9B;
+	color: #FFDFA4;
 }
 
 li.ipconf
 {
-	color: #978B93;
+	color: #A29AB6;
 }
 
 li.uptime
 {
-	color: #9CA68B;
+	color: #91B0A0;
 }
 
 li.disks
 {
-	color: #789C9F;
+	color: #9ECED1;
 }
 
 div.window
 {
-	background-color:#3F4040;
+	background-color:#2B3D46;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	margin-left: 5px;
