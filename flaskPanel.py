@@ -73,7 +73,7 @@ def hello_world():
 	eth0_data = parse_ifconfig('eth0')
 	lo_data = parse_ifconfig('lo')
 
-	root_info = parse_df('/dev/rot');
+	root_info = parse_df('/dev/root');
 	sda1_info = parse_df('/dev/sda1');
 	return render_template('index.html', uptime=uptime,
 					     date=date,
