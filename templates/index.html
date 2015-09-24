@@ -9,10 +9,9 @@ href="{{url_for('static', filename='style.css') }}">
 
 <body>
 	
-	<h1>Flask Panel</h1>
+	<h1>{{ config['common']['header'] }}</h1>
 	
-	
-
+	{% if config['dht']['display'] %}
 	<div class='window'>
 		<h2 id='htemp'>DHT11 sensor</h2>
 		<ul>
@@ -20,7 +19,9 @@ href="{{url_for('static', filename='style.css') }}">
 			<li class='temp'>Humididty: {{ hum }} %</li> 
 		</ul>
 	</div>
+	{% endif %}
 
+	{% if config['uptime']['display'] %}
 	<div class='window'>
 		<h2 id='huptime'>Uptime</h2>
 		<ul>
@@ -29,49 +30,41 @@ href="{{url_for('static', filename='style.css') }}">
 			<li class='uptime'>Load average: {{ loadavg }}</li>
 		</ul>
 	</div>
+	{% endif %}
 
+	{% if config['ifconfig']['display'] %}
 	<div class='window'>
 		<h2 id='hipconf'>Ifconfig</h2>
-		<ul id='interface_list'>	
-			<li class='ipconf'>Eth0:
+		<ul id='interface_list'>
+			{% for interface in interfaces %}	
+			<li class='ipconf'> {{ interface[0] }}
 			<ul>
-				{% for entry in eth0_data %}
+				{% for entry in interface[1] %}
 				<li class='ipconf'>{{ entry }}</li>
 				{% endfor %}
 			</ul></li>
-
-			<li class='ipconf'>lo:
-			<ul>
-				{% for entry in lo_data %}
-				<li class='ipconf'>{{ entry }}</li>
-				{% endfor %}
-			</ul></li>
+			{% endfor %}
 		</ul>
 	</div>
+	{% endif %}
 
+	{% if config['disks']['display'] %}
 	<div class='window'>
 		<h2 id='hdisks'>Disks</h2>
 		<ul>
-			<li class='disks'>/dev/root
+			{% for entry in devices %}
+			<li class='disks'>{{ entry[0] }}
 			<ul>
-				<li class='disks'>Size: {{ root_info[1] }}</li>
-				<li class='disks'>Used: {{ root_info[2] }} ({{ root_info[4] }})</li>
-				<li class='disks'>Available: {{ root_info[3] }}</li>
+				<li class='disks'>Size: {{ entry[1] }}</li>
+				<li class='disks'>Used: {{ entry[2] }} ({{ entry[4] }})</li>
+				<li class='disks'>Available: {{ entry[3] }}</li>
 			</ul></li>
-			{% if sda1_info %}
-			<li class='disks'>/dev/sda1
-			<ul>
-				<li class='disks'>Size: {{ sda1_info[1] }}</li>
-				<li class='disks'>Used: {{ sda1_info[2] }} ({{ sda1_info[4] }})</li>
-				<li class='disks'>Available: {{ sda1_info[3] }}</li>
-			</ul>
-			{% endif %}
-
-
+			{% endfor %}
 		<ul>
 	</div>
+	{% endif %}
 
-
+	{% if config['rest']['display'] %}
 	<div class='window'>
 		<h2 id='hrest'>REST</h2>
 		<ul>
@@ -83,4 +76,6 @@ href="{{url_for('static', filename='style.css') }}">
 			<li><a href='df' target="_blank">df</a> -- returns df -h output </li>
 		</ul>
 	</div>
+
+	{% endif %}
 </body>

@@ -9,11 +9,12 @@ import Adafruit_DHT
 import string
 
 from flask import Flask, render_template, request, redirect
+import pytoml as toml
 
 app = Flask(__name__)
 
-sensor = 11 #using DHT11 sensor
-pin = 13 #connected to pin 13
+DEBUG = False
+config = {} #variable to load config form panel_config.toml
 
 #primitive ifconfig parser
 def parse_ifconfig(interface):
@@ -23,16 +24,17 @@ def parse_ifconfig(interface):
 	proc_ifconfig = subprocess.Popen(['ifconfig', str(interface)], stdout=subprocess.PIPE)
 	#shell=True for trusted input only (shell injection)
 	try:
-		hwaddr = subprocess.check_output(['grep', 'HWaddr'], stdin=subprocess.PIPE)
+		hwaddr = subprocess.check_output(['grep', 'HWaddr'], stdin=proc_ifconfig.stdout)
 	except subprocess.CalledProcessError:
 		hwaddr = ''
 
 	proc_ifconfig.stdout.close()
+	print hwaddr
 
 	if hwaddr == '' or hwaddr.isspace():
 		hwaddr = 'HWaddr:none'
 	else:
-		hwaddr = 'HWaddr:' + hwaddr.strip()
+		hwaddr = 'HWaddr:' + hwaddr.strip().split()[4]
 
 	retval.append(hwaddr)
 
@@ -64,24 +66,30 @@ def parse_df(device):
 
 @app.route('/')
 def hello_world():
+	sensor = config['dht']['sensor_type']
+	pin = config['dht']['pin']
 	(hum, temp) = Adafruit_DHT.read_retry(sensor, pin)
 	date = subprocess.check_output(['date'])
 	uptime = subprocess.check_output("uptime | awk -F, {'print $1$2'}", shell=True)
 	uptime = uptime[10:].replace('  ', ' ') #remove date and redundant space
 	loadavg = subprocess.check_output(['cat', '/proc/loadavg'])
 
-	eth0_data = parse_ifconfig('eth0')
-	lo_data = parse_ifconfig('lo')
+	interfaces = [] #tuples in format (interface name(string),interface info (list of strings))
+	for interface in config['ifconfig']['interfaces']:
+		parsed_info = parse_ifconfig(interface)
+		interfaces.append((interface, parsed_info))
 
-	root_info = parse_df('/dev/root');
-	sda1_info = parse_df('/dev/sda1');
+	devices = []
+	for device in config['disks']['devices']:
+		parsed_info = parse_df(device)
+		devices.append(parsed_info)
+
 	return render_template('index.html', uptime=uptime,
+					     config=config,
 					     date=date,
 					     loadavg=loadavg,
-					     root_info=root_info,
-					     sda1_info=sda1_info,
-					     eth0_data=eth0_data,
-					     lo_data = lo_data,
+					     interfaces=interfaces,
+					     devices=devices,
 					     hum=hum,temp=temp)
 
 @app.route('/getTemp')
@@ -136,5 +144,10 @@ def set_theme():
 	return redirect('/')
 
 if __name__ == '__main__':
-	app.run(host='raspberrypi.local')
+
+	#load config
+	with open('panel_config.toml') as config_file:
+		config = toml.load(config_file)
+	
+	app.run(host='raspberrypi.local', debug=DEBUG)
 

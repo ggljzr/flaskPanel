@@ -1,0 +1,25 @@
+title = "Flask Panel Config"
+
+[common]
+header = "Pi Home"
+
+[dht]
+display = true
+fahrenheit = false
+pin = 13
+sensor_type = 11
+
+[uptime]
+display = true
+
+[ifconfig]
+display = true
+interfaces = ["eth0"]
+
+[disks]
+display = true
+devices = ["/dev/root", "/dev/sda1"]
+
+[rest]
+display = true
+
