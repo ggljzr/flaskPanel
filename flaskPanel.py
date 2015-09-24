@@ -66,8 +66,8 @@ def parse_df(device):
 
 @app.route('/')
 def hello_world():
-	sensor = config['dht']['sensor_type']
-	pin = config['dht']['pin']
+	sensor = 11 #config['dht']['sensor_type']
+	pin = 13 #config['dht']['pin']
 	(hum, temp) = Adafruit_DHT.read_retry(sensor, pin)
 	date = subprocess.check_output(['date'])
 	uptime = subprocess.check_output("uptime | awk -F, {'print $1$2'}", shell=True)
@@ -94,6 +94,8 @@ def hello_world():
 
 @app.route('/getTemp')
 def get_temp():
+	sensor = config['dht']['sensor_type']
+	pin = config['dht']['pin']
 	(hum, temp) = Adafruit_DHT.read_retry(sensor, pin) 
 
 	if temp is not None and hum is not None:
