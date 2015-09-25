@@ -29,7 +29,6 @@ def parse_ifconfig(interface):
 		hwaddr = ''
 
 	proc_ifconfig.stdout.close()
-	print hwaddr
 
 	if hwaddr == '' or hwaddr.isspace():
 		hwaddr = 'HWaddr:none'
@@ -92,6 +91,10 @@ def hello_world():
 					     devices=devices,
 					     hum=hum,temp=temp)
 
+@app.route('/settings')
+def settings():
+	return render_template('settings.html', config=config)
+
 @app.route('/getTemp')
 def get_temp():
 	sensor = config['dht']['sensor_type']
@@ -103,7 +106,7 @@ def get_temp():
 
 	return '{"temp" : "none" , "hum" : "none"}'
 
-@app.route('/ipconf')
+@app.route('/ifconf')
 def ipconf():
 	return subprocess.check_output(['ifconfig'])
 
@@ -144,6 +147,7 @@ def set_theme():
 
 	#return 'Theme changed to: ' + req_theme
 	return redirect('/')
+
 
 if __name__ == '__main__':
 

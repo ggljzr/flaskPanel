@@ -1,0 +1,37 @@
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="content-language" content="en" />
+<link rel="stylesheet" type="text/css" 
+href="{{url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+	<h1>{{ config['common']['header'] }}</h1>
+	<div id='settings_window'>
+		<h2 id='gen_settings'>Settings</h2>
+		
+		<div class='settings_subwindow'>	
+			<h3 class='temp'>DHT11</h3>
+			<ul>
+				<li>aaa</li>
+				<li>bbb</li>
+				<li>ccc</li>
+			</ul>
+		</div>
+
+		<div class='settings_subwindow'>
+			<h3 class='uptime'>Uptime</h3>
+		</div>
+
+		<div class='settings_subwindow'>
+			<h3 class='ifconf'>Ifconfig</h3>
+		</div>
+
+		<div class='settings_subwindow'>
+			<h3 class='disks'>Disks</h3>
+		</div>	
+	</div>
+	<a href='/' class='nav_link'>Back</a>
+</body>

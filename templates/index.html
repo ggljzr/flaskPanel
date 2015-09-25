@@ -34,13 +34,13 @@ href="{{url_for('static', filename='style.css') }}">
 
 	{% if config['ifconfig']['display'] %}
 	<div class='window'>
-		<h2 id='hipconf'>Ifconfig</h2>
+		<h2 id='hifconf'>Ifconfig</h2>
 		<ul id='interface_list'>
 			{% for interface in interfaces %}	
-			<li class='ipconf'> {{ interface[0] }}
+			<li class='ifconf'> {{ interface[0] }}
 			<ul>
 				{% for entry in interface[1] %}
-				<li class='ipconf'>{{ entry }}</li>
+				<li class='ifconf'>{{ entry }}</li>
 				{% endfor %}
 			</ul></li>
 			{% endfor %}
@@ -71,11 +71,12 @@ href="{{url_for('static', filename='style.css') }}">
 			<li><a href=getTemp target="_blank">getTemp</a> -- returns sensor value (JSON)</li>
 			<li><a href=getTheme target="_blank">getTheme</a> -- returns name of current color theme</li>
 			<li><a href=setTheme target="_blank">setTheme</a> -- sets color theme (?themeName=...)</li>
-			<li><a href=ipconf target="_blank">ipconf</a> -- returns ifconfig output</li>
+			<li><a href=ifconf target="_blank">ifconf</a> -- returns ifconfig output</li>
 			<li><a href=uptime target="_blank">uptime</a> -- returns uptime output</li>
 			<li><a href='df' target="_blank">df</a> -- returns df -h output </li>
 		</ul>
 	</div>
 
 	{% endif %}
+	<a href=settings id='settings_link' class='nav_link'>Settings</a>
 </body>

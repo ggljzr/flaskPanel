@@ -23,19 +23,22 @@ h2
 	margin-bottom: -5px;
 }
 
-
+h3
+{
+	margin: 3px;
+}
 
 h2#huptime
 {
 	background-color: #9CA68B;
 }
 
-h2#hrest
+h2#hrest, h2#gen_settings
 {
 	background-color: #A48484;
 }
 
-h2#hipconf
+h2#hifconf
 {
 	background-color: #978B93;
 }
@@ -55,27 +58,38 @@ a:hover
 	color: #fff4e8;
 }
 
+a.nav_link
+{
+	color: #fff4e8;
+	margin-left: 5px;
+}
+
+a.nav_link:hover
+{
+	color: #A48484;
+}
+
 li, a
 {
 	color: #A48484;
 }
 
-li.temp
+.temp
 {
 	color: #CABA9B;
 }
 
-li.ipconf
+.ifconf
 {
 	color: #978B93;
 }
 
-li.uptime
+.uptime
 {
 	color: #9CA68B;
 }
 
-li.disks
+.disks
 {
 	color: #789C9F;
 }
@@ -89,6 +103,26 @@ div.window
 	margin-bottom: 20px;
 	width: 450px;
 	box-shadow: 4px 4px 8px #2d2d2d;
+}
+
+div#settings_window
+{
+	background-color:#3F4040;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-left: 5px;
+	margin-bottom: 20px;
+	width: 60%;
+	box-shadow: 4px 4px 8px #2d2d2d;
+}
+
+div.settings_subwindow
+{
+	background-color: #3F4040;
+	border-style: Solid;
+	border-width: 1px;
+	border-color: #545454;
+	margin: 10px;
 }
 
 img
