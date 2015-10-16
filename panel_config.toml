@@ -18,7 +18,7 @@ interfaces = ["eth0"]
 
 [disks]
 display = true
-devices = ["/dev/root", "/dev/sda1"]
+devices = ["/dev/root"]
 
 [rest]
 display = true

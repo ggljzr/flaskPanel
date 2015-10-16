@@ -13,12 +13,12 @@ import pytoml as toml
 
 app = Flask(__name__)
 
-DEBUG = False
+DEBUG = False 
 config = {} #variable to load config form panel_config.toml
 
 #primitive ifconfig parser
 def parse_ifconfig(interface):
-	retval = []
+	interface_info = []
 	
 	#try to find hwaddr
 	proc_ifconfig = subprocess.Popen(['ifconfig', str(interface)], stdout=subprocess.PIPE)
@@ -33,33 +33,51 @@ def parse_ifconfig(interface):
 	if hwaddr == '' or hwaddr.isspace():
 		hwaddr = 'HWaddr:none'
 	else:
-		hwaddr = 'HWaddr:' + hwaddr.strip().split()[4]
+		hwaddr = 'HWaddr: ' + hwaddr.strip().split()[4]
 
-	retval.append(hwaddr)
+	interface_info.append(hwaddr)
 
 	#find additional info
 	proc_ifconfig = subprocess.Popen(['ifconfig', str(interface)], stdout=subprocess.PIPE)
 	try:
 		inet_row = subprocess.check_output(['grep', 'inet'], stdin=proc_ifconfig.stdout).strip().split()
 	except subprocess.CalledProcessError:
-		retval.append("No additioanl info found")
+		interface_info.append("No additioanl info found")
 		proc_ifconfig.stdout.close()
-		return retval
+		return interface_info
 
 	proc_ifconfig.stdout.close()
 
 	for i in inet_row[1:]: #skip "inet" in output
-		retval.append(i)
+		interface_info.append(i)
 	
-	return retval
+	return interface_info
 
 #parsing df output
+#returns empty list if parsing fails
 def parse_df(device):
 	#return os.popen('df -h ' + str(device) + ' | tail -n 1', 'r').read().split()
-	proc_df = subprocess.Popen(['df', '-h', str(device)], stdout=subprocess.PIPE)
-	dev_info = subprocess.check_output(['tail', '-n', '1'], stdin=proc_df.stdout).split()
-	proc_df.stdout.close()
 	
+	proc_df = subprocess.Popen(['df', '-h', '-T', str(device)], stdout=subprocess.PIPE)
+	#device info, skip device name
+	dev_info = subprocess.check_output(['tail', '-n', '1'], stdin=proc_df.stdout).split()[1:]
+	proc_df.stdout.close()
+
+	#this may need further refactoring
+	if len(dev_info) > 4:
+		#formating
+		dev_info[0] = "Type: " + dev_info[0] #filesystem type
+		dev_info[1] = "Size: " + dev_info[1] #size
+		dev_info[2] = "Used: " + dev_info[2] + " (" + dev_info[4] + ")" #used space + percentage
+		dev_info[3] = "Available: " + dev_info[3] #free space
+		dev_info[4] = "Mounted on: " + dev_info[5] #mountpoint
+
+		#pop last entry (duplicated mount point)
+		dev_info.pop()
+	elif len(dev_info) == 0:
+		dev_info.append("Device not found")
+
+
 	return dev_info
 
 
@@ -78,10 +96,10 @@ def hello_world():
 		parsed_info = parse_ifconfig(interface)
 		interfaces.append((interface, parsed_info))
 
-	devices = []
+	devices = [] #tuples in formate (device name(string), device info (list of strings))
 	for device in config['disks']['devices']:
 		parsed_info = parse_df(device)
-		devices.append(parsed_info)
+		devices.append((device, parsed_info))
 
 	return render_template('index.html', uptime=uptime,
 					     config=config,

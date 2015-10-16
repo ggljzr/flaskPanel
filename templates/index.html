@@ -51,16 +51,16 @@ href="{{url_for('static', filename='style.css') }}">
 	{% if config['disks']['display'] %}
 	<div class='window'>
 		<h2 id='hdisks'>Disks</h2>
-		<ul>
-			{% for entry in devices %}
-			<li class='disks'>{{ entry[0] }}
+		<ul id='device_list'>
+			{% for device in devices %}
+			<li class='disks'>{{ device[0] }}
 			<ul>
-				<li class='disks'>Size: {{ entry[1] }}</li>
-				<li class='disks'>Used: {{ entry[2] }} ({{ entry[4] }})</li>
-				<li class='disks'>Available: {{ entry[3] }}</li>
+				{% for entry in device[1] %}
+				<li class='disks'>{{ entry }}</li>
+				{% endfor %}
 			</ul></li>
 			{% endfor %}
-		<ul>
+		</ul>
 	</div>
 	{% endif %}
 
