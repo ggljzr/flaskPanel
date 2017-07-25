@@ -8,14 +8,14 @@ To run use "sudo python flaskPanel.py" (sudo is needed for access to Rpi's GPIO 
 ## dependencies
 You need Flask, pytoml and Adafruit DHT library. 
 On Raspberry Pi Flask can be installed with package manager 
-``
+```
 $ sudo apt-get install python-flask
-``
+```
 
 Pytoml can be installed with pip package manager
-``
+```
 $ sudo pip install pytoml
-``
+```
 You may have to install pip with standard package manager first.
 
 For installing Adafruit DHT library follow the link above.
