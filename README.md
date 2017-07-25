@@ -5,17 +5,17 @@ Sensor is DHT11 and it is read with Adafruit DHT library (https://github.com/ada
 
 To run use "sudo python flaskPanel.py" (sudo is needed for access to Rpi's GPIO pins).
 
-##dependencies
+## dependencies
 You need Flask, pytoml and Adafruit DHT library. 
 On Raspberry Pi Flask can be installed with package manager 
-<pre><code>
-sudo apt-get install python-flask
-</code></pre>
+``
+$ sudo apt-get install python-flask
+``
 
 Pytoml can be installed with pip package manager
-<pre><code>
-sudo pip install pytoml
-</code></pre>
+``
+$ sudo pip install pytoml
+``
 You may have to install pip with standard package manager first.
 
 For installing Adafruit DHT library follow the link above.
